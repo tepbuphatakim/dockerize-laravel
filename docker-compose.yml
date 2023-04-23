@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  app:
+    container_name: mep-admin
+    build: .
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+    networks:
+      - mep
+
+  mysql: 
+    container_name: mep-mysql
+    image: mysql
+    environment:
+      - MYSQL_DATABASE=mep
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - mep
+
+  phpmyadmin:
+    container_name: mep-phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "3400:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - mysql
+    networks:
+      - mep
+
+networks:
+  mep:
+    driver: bridge  
